@@ -14,9 +14,9 @@ class Edge:
     def __init__(self, v1, v2, l=0.0, k=0.0, color='white'):
         self.v1 = v1
         self.v2 = v2
-        self.l = l
-        self.k = k
-        self.color = color
+        self.l = 0.0
+        self.k = 0.0
+        self.color = 'white'
 class Graph:
     def __init__(self, V=[], E=[]):
         self.V = V
