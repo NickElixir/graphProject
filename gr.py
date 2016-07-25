@@ -58,3 +58,12 @@ class Graph:
         if allBad:
             print('Error: incorrect args')
             return -1
+    def makeEmpty(self):
+        self.E = []
+    def clearAll(self):
+        self.V = []
+        makeEmpty()
+    def createEmpty(self, n):
+        clearAll()
+        for i in range(n):
+            addVertex()
