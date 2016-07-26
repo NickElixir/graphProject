@@ -45,7 +45,7 @@ class Graph:
             print('Error: No such vertex')
             return -1
         else:
-            for e in E:
+            for e in self.E:
                 if v == e.v1 or v == e.v2:
                     self.delEdge(e.v1, e.v2)
                     self.V.remove(v)
@@ -66,9 +66,9 @@ class Graph:
         self.V = []
         self.makeEmpty()
     def createEmpty(self, n:int):
-        clearAll()
+        self.clearAll()
         for i in range(n):
-            addVertex()
+            self.addVertex()
     def randomTree(self, n:int):
         self.clearAll()
         self.addVertex()
@@ -80,4 +80,3 @@ class Graph:
             while count-1 == k:
                 k = random.randrange(0, count-1)
             self.addEdge(self.V[count-1], self.V[k])
-            print(count-1, k)
