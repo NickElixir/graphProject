@@ -81,6 +81,3 @@ class Graph:
                 k = random.randrange(0, count-1)
             self.addEdge(self.V[count-1], self.V[k])
             print(count-1, k)
-
-graph = Graph()
-graph.randomTree(10)
