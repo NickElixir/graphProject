@@ -80,10 +80,8 @@ class Graph:
             while count-1 == k:
                 k = random.randrange(0, count-1)
             self.addEdge(self.V[count-1], self.V[k])
-    def readFile():
-        f=open(input(), 'rt')
-        h=[]
-        for line in f:
+    def readFile(self, fileName: str):
+        stream = open(fileName, 'rt')
+        for line in stream:
             splitted = line.split()
-            h.append([int(splitted[0]), int(splitted[1])])
-        return h
+            E.append([int(splitted[0]), int(splitted[1])]
