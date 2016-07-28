@@ -1,11 +1,6 @@
-from tkinter import *
-import time, gr
-import math, random
-
+import time, gr, math, random
 d = 0.9
-root = Tk()
-canvas = Canvas(root, width=1000, height=800, bg="white")
-canvas.pack()
+
 def setConstans (g:gr.Graph):
     for i in g.V:
         i.x = random.uniform(-1, 1)
@@ -32,7 +27,6 @@ def physStep(g:gr.Graph):
                 i.vx += ax
                 i.vy += ay
                 i.vz += az
-
     for i in g.E:
         x1 = i.v1.x
         x2 = i.v2.x
@@ -43,19 +37,16 @@ def physStep(g:gr.Graph):
         k = i.k
         l = i.l
         r = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2)
-
         a = k * (l - r)
         ax = (x1 - x2) / math.sqrt(r) * a
         ay = (y1 - y2) / math.sqrt(r) * a
         az = (z1 - z2) / math.sqrt(r) * a
-        #Начало особого места
         i.v1.vx += ax
         i.v2.vx -= ax
         i.v1.vy += ay
         i.v2.vy -= ay
         i.v1.vz += az
         i.v2.vz -= az
-        #Конец особого места
     for i in g.V:
         i.vx *= d
         i.vy *= d
