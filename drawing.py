@@ -51,7 +51,7 @@ def checkPoint(graph:gr.Graph):
             or centreY(i.y*scale)>height-indent #проверка координат вершин, чтобы они не ушли за видимую область
             or centreX(i.x*scale)<0+indent
             or centreY(i.y*scale)<0+indent):
-            scale=scale-0.1
+            scale=scale-0.02
 
 def drawing(graph:gr.Graph): #основная функция, которая рисует граф на плоскости
     updateLines(graph)
