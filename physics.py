@@ -63,6 +63,3 @@ def physStep(g:gr.Graph):
         i.x += i.vx
         i.y += i.vy
         i.z += i.vz
-def main():
-    if __name__=="__min__":
-        main()
