@@ -98,7 +98,7 @@ class Graph:
         self.createEmpty(int(n))
         count = 0
         for line in stream:
-            color = int(line.readline())
+            color = int(line)
             self.V[count].colorCode = color
             count += 1
 
