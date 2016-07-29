@@ -95,7 +95,7 @@ class Graph:
     def readVertexFile(self, fileName: str):
         stream = open(fileName, 'r')
         n = stream.readline()
-        self.createEmpty(n)
+        self.createEmpty(int(n))
         count = 0
         for line in stream:
             color = int(line.readline())
