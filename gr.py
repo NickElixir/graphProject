@@ -94,7 +94,7 @@ class Graph:
 
     def readVertexFile(self, fileName: str):
         stream = open(fileName, 'r')
-        n = stream.readline()
+        n = int(stream.readline())
         createEmpty(n)
         count = 0
         for line in stream:
