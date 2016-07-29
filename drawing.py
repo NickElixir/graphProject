@@ -15,28 +15,6 @@ def centreX(x):
 def centreY(y):
     return y + canvas.winfo_reqheight()/2
 
-def setPointID(graph:gr.Graph):
-    for i in graph.V:
-        i.id = canvas.create_oval(centreX(i.x) - i.rad, centreY(i.y) - i.rad,
-                                 centreX(i.x) + i.rad, centreY(i.y) + i.rad,
-                                 fill = i.color)
-
-def setLineID(graph:gr.Graph):
-    for i in graph.E:
-        i.id = canvas.create_line(i.v1.x, i.v1.y, i.v2.x, i.v2.y, fill=i.color)
-
-def setID(graph:gr.Graph):
-    setLineID(graph)
-    setPointID(graph)
-
-def changeRad(p:gr.Vertex):
-    rad=(math.atan(p.z / 200)/(math.pi/2)*p.rad)+p.rad
-    if (rad < 3):
-        rad = 3
-    elif (rad>12):
-        rad=12
-    return rad
-
 def colorToList(colorStr):
     redStr = str(colorStr[1] + colorStr[2])
     greenStr = str(colorStr[3] + colorStr[4])
@@ -80,18 +58,18 @@ def listToColor(colorList):
     return color
 
 def blackoutPoint(v:gr.Vertex):
-        colorList = colorToList(v.color)
-        redInt = colorList[0]
-        greenInt = colorList[1]
-        blueInt = colorList[2]
-        atanGraphic=(math.atan(v.z / 10)/math.pi/2)
-        redInt=atanGraphic*redInt/2+redInt/2
-        greenInt=atanGraphic*greenInt/2+greenInt/2
-        blueInt=atanGraphic*blueInt/2+blueInt/2
-        colorList[0]=redInt
-        colorList[1]=greenInt
-        colorList[2]=blueInt
-        return listToColor(colorList)
+    colorList = colorToList(v.color)
+    redInt = colorList[0]
+    greenInt = colorList[1]
+    blueInt = colorList[2]
+    atanGraphic=(math.atan(v.z / 10)/math.pi/2)
+    redInt=atanGraphic*redInt/2+redInt/2
+    greenInt=atanGraphic*greenInt/2+greenInt/2
+    blueInt=atanGraphic*blueInt/2+blueInt/2
+    colorList[0]=redInt
+    colorList[1]=greenInt
+    colorList[2]=blueInt
+    return listToColor(colorList)
 
 def blackoutLine(e:gr.Edge):
     colorList = colorToList(e.color)
@@ -106,6 +84,67 @@ def blackoutLine(e:gr.Edge):
     colorList[1] = greenInt
     colorList[2] = blueInt
     return listToColor(colorList)
+
+def mixedColorLine(e: gr.Edge):
+    if (e.v1.color == e.v2.color):
+        print(e.v1.color)
+        return e.v1.color
+    else:
+        colorlistE = []
+        colorListV1 = colorToList(e.v1.color)
+        redIntV1 = colorListV1[0]
+        greenIntV1 = colorListV1[1]
+        blueIntV1 = colorListV1[2]
+
+        colorListV2 = colorToList(e.v2.color)
+        redIntV2 = colorListV2[0]
+        greenIntV2 = colorListV2[1]
+        blueIntV2 = colorListV2[2]
+
+        if (redIntV1 == redIntV2):
+            colorlistE.append(redIntV1)
+        else:
+            redIntE = (redIntV1 + redIntV2) / 2
+            colorlistE.append(redIntE)
+
+        if (greenIntV1 == greenIntV2):
+            colorlistE.append(greenIntV1)
+        else:
+            greenIntE = (greenIntV1 + greenIntV2) / 2
+            colorlistE.append(greenIntE)
+
+        if (blueIntV1 == blueIntV2):
+            colorlistE.append(blueIntV1)
+        else:
+            blueIntE = (blueIntV1 + blueIntV2) / 2
+            colorlistE.append(blueIntE)
+
+        return listToColor(colorlistE)
+
+def setPointID(graph:gr.Graph):
+    for i in graph.V:
+        i.id = canvas.create_oval(centreX(i.x) - i.rad, centreY(i.y) - i.rad,
+                                 centreX(i.x) + i.rad, centreY(i.y) + i.rad,
+                                 fill = i.color)
+
+def setLineID(graph:gr.Graph):
+    for i in graph.E:
+        i.color=mixedColorLine(i)
+        i.id = canvas.create_line(i.v1.x, i.v1.y, i.v2.x, i.v2.y, fill=i.color)
+
+def setID(graph:gr.Graph):
+    setLineID(graph)
+    setPointID(graph)
+
+def changeRad(p:gr.Vertex):
+    rad=(math.atan(p.z / 200)/(math.pi/2)*p.rad)+p.rad
+    if (rad < 3):
+        rad = 3
+    elif (rad>12):
+        rad=12
+    return rad
+
+
 
 def updatePoints(graph:gr.Graph):
     for i in graph.V:
