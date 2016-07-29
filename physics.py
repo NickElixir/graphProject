@@ -6,7 +6,7 @@ d = constans.dc
 k = constans.kc
 l = constans.lc
 q = constans.qc
-
+threed = constans.threedc
 def setConstans(g:gr.Graph):#координаты каждой вершины
     for i in g.V:
         i.x = random.uniform(-1, 1)
@@ -22,13 +22,17 @@ def physStep(g:gr.Graph):
     for i in g.V:#сила кулона
         x1 = i.x
         y1 = i.y
-        z1 = i.z
         q1 = i.q
         for j in g.V:
             if i != j:
                 x2 = j.x
                 y2 = j.y
-                z2 = j.z
+                if threed:
+                    z2 = j.z
+                    z1 = i.z
+                else:
+                    z1 = 0
+                    z2 = 0
                 q2 = j.q
                 r = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2  + (z1 - z2)**2)
                 a = q1*q2 / r
