@@ -86,6 +86,16 @@ class Graph:
         for i in range(n):
             self.addVertex()
 
+    def createChain(self, n: int):
+        self.createEmpty(n)
+        for i in range(1, n):
+            self.addEdge(self.V[i], self.V[i-1])
+
+    def createCircle(self, n:int):
+        self.createChain(n)
+        self.addEdge(self.V[n-1], self.V[0])
+
+
     def randomTree(self, n: int):
         self.clearAll()
         self.addVertex()
@@ -108,9 +118,9 @@ class Graph:
                 self.V[count].color = '#ff0000'
             elif color == 2:
                 self.V[count].color = '#0000ff'
-            count += 1
             elif color == 3:
                 self.V[count].color = '#00ff00'
+            count += 1
 
     def readEdgeFile(self, fileName: str):
         stream = open(fileName, 'r')
@@ -124,3 +134,18 @@ class Graph:
             if e.v1 == v or e.v2 == v:
                 count += 1
         return count
+
+def multiply(A: Graph, B: Graph):
+    g = Graph()
+    g.createEmpty(len(A.V)*len(B.V))
+    for e in B.E:
+        i = B.V.index(e.v1)
+        j = B.V.index(e.v2)
+        for k in range(len(A.V)):
+            addEdge(g.V[n*k+i], g.V[n*k+j])
+    for e in A.E:
+        i = A.V.index(e.v1)
+        j = A.V.index(e.v2)
+        for k in range(len(B.V)):
+            addEdge(g.V[n*i+k], g.V[n*j+k])
+    return g
