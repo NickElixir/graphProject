@@ -109,6 +109,8 @@ class Graph:
             elif color == 2:
                 self.V[count].color = '#0000ff'
             count += 1
+            elif color == 3:
+                self.V[count].color = '#00ff00'
 
     def readEdgeFile(self, fileName: str):
         stream = open(fileName, 'r')
