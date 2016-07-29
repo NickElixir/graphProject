@@ -94,19 +94,19 @@ class Graph:
 
     def readVertexFile(self, fileName: str):
         stream = open(fileName, 'r')
-        n = int(stream.readline())
-        createEmpty(n)
+        n = stream.readline()
+        self.createEmpty(n)
         count = 0
         for line in stream:
             color = int(line.readline())
-            V[count].colorCode = color
+            self.V[count].colorCode = color
             count += 1
 
     def readEdgeFile(self, fileName: str):
         stream = open(fileName, 'r')
         for line in stream:
             splitted = line.split()
-            newEdge(int(splitted[0]), int(splitted[1]))
+            self.addEdge(self.V[splitted[0]-1], self.V[splitted[1]-1])
 
     def degree(self, v: Vertex):
         count = 0
