@@ -109,7 +109,7 @@ class Graph:
         stream = open(fileName, 'r')
         for line in stream:
             splitted = line.split()
-            self.addEdge(self.V[int(splitted[0]-1)], self.V[int(splitted[1]-1]))
+            self.addEdge(self.V[int(splitted[0])-1], self.V[int(splitted[1])-1])
 
     def degree(self, v: Vertex):
         count = 0
