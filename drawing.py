@@ -1,9 +1,13 @@
 import gr
 import tkinter
 import math
+import random
+
 width=1280
 height=700
 scale=1
+changeScale=0.001
+weedMod = 0 # чтобы включить мод поменяй значение на True
 
 root = tkinter.Tk()
 canvas=tkinter.Canvas(root, width=width, height=height, bg="black")
@@ -22,7 +26,7 @@ def colorToList(colorStr):
     redInt = eval("0x" + redStr)
     greenInt = eval("0x" + greenStr)
     blueInt = eval("0x" + blueStr)
-    colorList=[redInt, greenInt, blueInt]
+    colorList = [redInt, greenInt, blueInt]
     return colorList
 
 def listToColor(colorList):
@@ -40,7 +44,7 @@ def listToColor(colorList):
     elif (len(redStr) == 4):
         redStr = redStr[2] + redStr[3]
     else:
-        return -1;
+        return -1
 
     if (len(greenStr) == 3):
         greenStr = "0" + greenStr[2]
@@ -87,7 +91,6 @@ def blackoutLine(e:gr.Edge):
 
 def mixedColorLine(e: gr.Edge):
     if (e.v1.color == e.v2.color):
-        print(e.v1.color)
         return e.v1.color
     else:
         colorlistE = []
@@ -121,21 +124,6 @@ def mixedColorLine(e: gr.Edge):
 
         return listToColor(colorlistE)
 
-def setPointID(graph:gr.Graph):
-    for i in graph.V:
-        i.id = canvas.create_oval(centreX(i.x) - i.rad, centreY(i.y) - i.rad,
-                                 centreX(i.x) + i.rad, centreY(i.y) + i.rad,
-                                 fill = i.color)
-
-def setLineID(graph:gr.Graph):
-    for i in graph.E:
-        i.color=mixedColorLine(i)
-        i.id = canvas.create_line(i.v1.x, i.v1.y, i.v2.x, i.v2.y, fill=i.color)
-
-def setID(graph:gr.Graph):
-    setLineID(graph)
-    setPointID(graph)
-
 def changeRad(p:gr.Vertex):
     rad=(math.atan(p.z / 200)/(math.pi/2)*p.rad)+p.rad
     if (rad < 3):
@@ -144,19 +132,78 @@ def changeRad(p:gr.Vertex):
         rad=12
     return rad
 
+def colorRandom(v: gr.Vertex):
+    colorList = [0, 0, 0]
 
+    redInt = random.randint(0, 255)
+    greenInt = random.randint(0, 255)
+    blueInt = random.randint(0, 255)
+
+    colorList[0] = redInt
+    colorList[1] = greenInt
+    colorList[2] = blueInt
+    return listToColor(colorList)
+
+
+def colorTransition(v: gr.Vertex):
+    colorList = colorToList(v.color)
+    redInt = colorList[0]
+    greenInt = colorList[1]
+    blueInt = colorList[2]
+
+    if (redInt + v.vr > 255 or redInt + v.vr < 0):
+        v.vr = -v.vr
+    if (greenInt + v.vg > 255 or greenInt + v.vg < 0):
+        v.vg = -v.vg
+    if (blueInt + v.vb > 255 or blueInt + v.vb < 0):
+        v.vb = -v.vb
+    redInt = redInt + v.vr
+    greenInt = greenInt + v.vg
+    blueInt = blueInt + v.vb
+
+    colorList[0] = redInt
+    colorList[1] = greenInt
+    colorList[2] = blueInt
+
+    v.color = listToColor(colorList)
+    return v.color
+
+def setPointID(graph:gr.Graph):
+    for i in graph.V:
+        i.id = canvas.create_oval(centreX(i.x) - i.rad, centreY(i.y) - i.rad,
+                                 centreX(i.x) + i.rad, centreY(i.y) + i.rad,
+                                 fill = colorRandom(i))
+        i.vr = random.randint(1, 10)
+        i.vg = random.randint(1, 10)
+        i.vb = random.randint(1, 10)
+
+def setLineID(graph:gr.Graph):
+    for i in graph.E:
+        i.color = mixedColorLine(i)
+        i.id = canvas.create_line(i.v1.x, i.v1.y, i.v2.x, i.v2.y, fill=colorRandom(i))
+
+def setID(graph:gr.Graph):
+    setLineID(graph)
+    setPointID(graph)
 
 def updatePoints(graph:gr.Graph):
     for i in graph.V:
         rad = changeRad(i)
         canvas.coords(i.id, centreX(i.x*scale-rad), centreY(i.y*scale-rad),
                       centreX(i.x*scale+rad), centreY(i.y*scale+rad))
+        if weedMod:
+            colorTransition(i)
         canvas.itemconfig(i.id, fill=blackoutPoint(i))
+
 def updateLines(graph:gr.Graph):
     for i in graph.E:
         canvas.coords(i.id, centreX(i.v1.x*scale), centreY(i.v1.y*scale),
                       centreX(i.v2.x*scale), centreY(i.v2.y*scale))
+
+        if weedMod:
+            i.color = mixedColorLine(i)
         canvas.itemconfig(i.id, fill=blackoutLine(i))
+
 def checkPoint(graph:gr.Graph):
     global  scale
     for i in graph.V:
@@ -164,7 +211,7 @@ def checkPoint(graph:gr.Graph):
             or centreY(i.y*scale)>height-10
             or centreX(i.x*scale)<10
             or centreY(i.y*scale)<10):
-            scale=scale-0.001
+            scale=scale-changeScale
 
 def drawing(graph:gr.Graph):
     updateLines(graph)
