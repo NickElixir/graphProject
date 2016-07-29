@@ -2,7 +2,7 @@ import random
 
 
 class Vertex:
-    def __init__(self, x=0.0, y=0.0, z=0.0, color='#ffffff', colorCode = 0, rad=5, q=1.0, vx=0.0, vy=0.0, vz=0.0):
+    def __init__(self, x=0.0, y=0.0, z=0.0, color='#ffffff', colorCode=0, rad=5, q=1.0, vx=0.0, vy=0.0, vz=0.0, vr=0.0, vg=0.0, vb=0.0):
         self.x = x
         self.y = y
         self.z = z
@@ -13,6 +13,9 @@ class Vertex:
         self.vy = vy
         self.vz = vz
         self.id = 0.0
+        self.vr = 0.0
+        self.vg = 0.0
+        self.vb = 0.0
 
 
 class Edge:
@@ -106,7 +109,7 @@ class Graph:
         stream = open(fileName, 'r')
         for line in stream:
             splitted = line.split()
-            self.addEdge(self.V[splitted[0]-1], self.V[splitted[1]-1])
+            self.addEdge(self.V[int(splitted[0]-1)], self.V[int(splitted[1]-1]))
 
     def degree(self, v: Vertex):
         count = 0
