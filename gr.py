@@ -7,6 +7,7 @@ class Vertex:
         self.y = y
         self.z = z
         self.color = color
+        self.colorCode = 0
         self.rad = rad
         self.q = q
         self.vx = vx
@@ -103,6 +104,10 @@ class Graph:
         for line in stream:
             color = int(line)
             self.V[count].colorCode = color
+            if color == 1:
+                self.V[count].color = '#ff0000'
+            elif color == 2:
+                self.V[count].color = '#0000ff'
             count += 1
 
     def readEdgeFile(self, fileName: str):
