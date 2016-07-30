@@ -205,13 +205,26 @@ def updateLines(graph:gr.Graph):
         canvas.itemconfig(i.id, fill=blackoutLine(i))
 
 def checkPoint(graph:gr.Graph):
-    global  scale
+    global scale
+    chSc = True
     for i in graph.V:
+        global chSc
         if (centreX(i.x*scale)>width-10
             or centreY(i.y*scale)>height-10
             or centreX(i.x*scale)<10
             or centreY(i.y*scale)<10):
             scale=scale-changeScale
+            return
+
+        if (not((centreX(i.x*scale)<width-50
+            and centreX(i.x*scale)>50)
+            and (centreY(i.y*scale)<height-50
+            and centreY(i.y*scale)>50))):
+
+            chSc = False
+
+    if chSc:
+        scale+=changeScale
 
 def drawing(graph:gr.Graph):
     updateLines(graph)
