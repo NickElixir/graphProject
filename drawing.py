@@ -6,7 +6,7 @@ import random
 width = 1280 #ширина окна
 height = 700 #высота окна
 scale = 1 #масштаб
-changeScale = 0.001 #изменение масщтаба
+changeScale = 0.001 #изменение масштаба
 weedMod = 0 #чтобы включить мод поменяй значение на True
 
 
