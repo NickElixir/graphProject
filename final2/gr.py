@@ -45,14 +45,18 @@ class Graph:
 
     def addEdge(self, v1: Vertex, v2: Vertex):
         e = Edge(v1, v2)
-        e2 = Edge(v2, v1)
         if self.V.count(v1) < 1 or self.V.count(v2) < 1 or v1 == v2:
             print('Error: Incorrect args')
             return -1
-        elif self.E.count(e) > 0 or self.E.count(e2) > 0:
-            print('Error: Incorrect args')
-            return -1
         else:
+            for i in self.E:
+                if i.v1 == v1 and i.v2 == v2:
+                    print('Error: Incorrect args')
+                    return -1
+                if i.v1 == v1 and i.v2 == v1:
+                    print('Error: Incorrect args')
+                    return -1
+
             self.E.append(e)
             return 0
 
@@ -111,6 +115,15 @@ class Graph:
             k = random.randrange(0, count)
             self.addEdge(self.V[count], self.V[k])
 
+    def randomGraph(self, n:int, p:float):
+        self.createEmpty(n)
+        for i in range(1, n):
+            for j in range(0, i):
+                a = random.uniform(0, 1)
+                #print(a)
+                if a < p:
+                    self.addEdge(self.V[i], self.V[j])
+
     def readVertexFile(self, fileName: str):
         stream = open(fileName, 'r')
         n = stream.readline()
@@ -120,11 +133,11 @@ class Graph:
             color = int(line)
             self.V[count].colorCode = color
             if color == 1:
-                self.V[count].color = '#ff0000'
+                self.V[count].color = constants.colorVertexFileGirls
             elif color == 2:
-                self.V[count].color = '#0000ff'
+                self.V[count].color = constants.colorVertexFileBoys
             elif color == 3:
-                self.V[count].color = '#00ff00'
+                self.V[count].color = constants.colorVertexFilePro
             count += 1
 
     def readEdgeFile(self, fileName: str):
@@ -139,6 +152,24 @@ class Graph:
             if e.v1 == v or e.v2 == v:
                 count += 1
         return count
+
+    def exportToFile(self, filename):
+        f = open(filename, 'wt')
+        for e in self.E:
+            f.write(str(self.V.index(e.v1)) + " " + str(self.V.index(e.v2)) + '\n')
+        f.close()
+
+    def exportDegrees(self, filename):
+        f = open(filename, 'wt')
+        Arr = [0] * len(self.V)
+        for v in self.V:
+            k = self.degree(v)
+            Arr[k] += 1
+
+        for i in Arr:
+            f.write(str(i) + '\n')
+
+        f.close()
 
 def multiply(A: Graph, B: Graph):
     g = Graph()
