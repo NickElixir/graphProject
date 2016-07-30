@@ -3,23 +3,24 @@ import tkinter
 import math
 import random
 
-width=1280
-height=700
-scale=1
-changeScale=0.001
-weedMod = 0 # чтобы включить мод поменяй значение на True
+width = 1280 #ширина окна
+height = 700 #высота окна
+scale = 1 #масштаб
+changeScale = 0.001 #изменение масщтаба
+weedMod = 0 #чтобы включить мод поменяй значение на True
+
 
 root = tkinter.Tk()
 canvas=tkinter.Canvas(root, width=width, height=height, bg="black")
 canvas.pack()
 
-def centreX(x):
+def centreX(x): #центровка по x
     return x + canvas.winfo_reqwidth()/2
 
-def centreY(y):
+def centreY(y): #центровка по y
     return y + canvas.winfo_reqheight()/2
 
-def colorToList(colorStr):
+def colorToList(colorStr): #перевод hex-цвета в rgb-лист
     redStr = str(colorStr[1] + colorStr[2])
     greenStr = str(colorStr[3] + colorStr[4])
     blueStr = str(colorStr[5] + colorStr[6])
@@ -29,7 +30,7 @@ def colorToList(colorStr):
     colorList = [redInt, greenInt, blueInt]
     return colorList
 
-def listToColor(colorList):
+def listToColor(colorList): #перевод из rgb-листа в hex-цвета
 
     redInt=colorList[0]
     greenInt=colorList[1]
@@ -61,7 +62,7 @@ def listToColor(colorList):
     color="#" + redStr + greenStr + blueStr
     return color
 
-def blackoutPoint(v:gr.Vertex):
+def blackoutPoint(v:gr.Vertex): #затемнение вершины для иллюзии 3D
     colorList = colorToList(v.color)
     redInt = colorList[0]
     greenInt = colorList[1]
@@ -75,7 +76,7 @@ def blackoutPoint(v:gr.Vertex):
     colorList[2]=blueInt
     return listToColor(colorList)
 
-def blackoutLine(e:gr.Edge):
+def blackoutLine(e:gr.Edge): #затемнение ребра для создания иллюзии 3D
     colorList = colorToList(e.color)
     redInt = colorList[0]
     greenInt = colorList[1]
@@ -89,7 +90,7 @@ def blackoutLine(e:gr.Edge):
     colorList[2] = blueInt
     return listToColor(colorList)
 
-def mixedColorLine(e: gr.Edge):
+def mixedColorLine(e: gr.Edge): #смешанный цвет ребра по вершинам
     if (e.v1.color == e.v2.color):
         return e.v1.color
     else:
@@ -124,7 +125,7 @@ def mixedColorLine(e: gr.Edge):
 
         return listToColor(colorlistE)
 
-def changeRad(p:gr.Vertex):
+def changeRad(p:gr.Vertex): #изменение радиуса для иллюзии 3D
     rad=(math.atan(p.z / 200)/(math.pi/2)*p.rad)+p.rad
     if (rad < 3):
         rad = 3
@@ -132,7 +133,7 @@ def changeRad(p:gr.Vertex):
         rad=12
     return rad
 
-def colorRandom(v: gr.Vertex):
+def colorRandom(v: gr.Vertex): #рандомный цвет вершины
     colorList = [0, 0, 0]
 
     redInt = random.randint(0, 255)
@@ -145,7 +146,7 @@ def colorRandom(v: gr.Vertex):
     return listToColor(colorList)
 
 
-def colorTransition(v: gr.Vertex):
+def colorTransition(v: gr.Vertex): #переливание цвета
     colorList = colorToList(v.color)
     redInt = colorList[0]
     greenInt = colorList[1]
@@ -168,7 +169,7 @@ def colorTransition(v: gr.Vertex):
     v.color = listToColor(colorList)
     return v.color
 
-def setPointID(graph:gr.Graph):
+def setPointID(graph:gr.Graph): #запись всех вершин в начале
     for i in graph.V:
         i.id = canvas.create_oval(centreX(i.x) - i.rad, centreY(i.y) - i.rad,
                                  centreX(i.x) + i.rad, centreY(i.y) + i.rad,
@@ -177,7 +178,7 @@ def setPointID(graph:gr.Graph):
         i.vg = random.randint(1, 10)
         i.vb = random.randint(1, 10)
 
-def setLineID(graph:gr.Graph):
+def setLineID(graph:gr.Graph): #запись всех ребер в начале
     for i in graph.E:
         i.color = mixedColorLine(i)
         i.id = canvas.create_line(i.v1.x, i.v1.y, i.v2.x, i.v2.y, fill=colorRandom(i))
@@ -186,7 +187,7 @@ def setID(graph:gr.Graph):
     setLineID(graph)
     setPointID(graph)
 
-def updatePoints(graph:gr.Graph):
+def updatePoints(graph:gr.Graph): #обновление всех вершин
     for i in graph.V:
         rad = changeRad(i)
         canvas.coords(i.id, centreX(i.x*scale-rad), centreY(i.y*scale-rad),
@@ -195,7 +196,7 @@ def updatePoints(graph:gr.Graph):
             colorTransition(i)
         canvas.itemconfig(i.id, fill=blackoutPoint(i))
 
-def updateLines(graph:gr.Graph):
+def updateLines(graph:gr.Graph): #обновление всех ребер
     for i in graph.E:
         canvas.coords(i.id, centreX(i.v1.x*scale), centreY(i.v1.y*scale),
                       centreX(i.v2.x*scale), centreY(i.v2.y*scale))
@@ -204,7 +205,7 @@ def updateLines(graph:gr.Graph):
             i.color = mixedColorLine(i)
         canvas.itemconfig(i.id, fill=blackoutLine(i))
 
-def checkPoint(graph:gr.Graph):
+def checkPoint(graph:gr.Graph): #проверка вершин для того, чтобы они не ушли за окно
     global  scale
     for i in graph.V:
         if (centreX(i.x*scale)>width-10
@@ -213,7 +214,7 @@ def checkPoint(graph:gr.Graph):
             or centreY(i.y*scale)<10):
             scale=scale-changeScale
 
-def drawing(graph:gr.Graph):
+def drawing(graph:gr.Graph): #основная функция файла
     updateLines(graph)
     updatePoints(graph)
     checkPoint(graph)
