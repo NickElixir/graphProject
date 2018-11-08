@@ -206,9 +206,8 @@ def updateLines(graph:gr.Graph):
 
 def checkPoint(graph:gr.Graph):
     global scale
-    chSc = True
+    global chSc = True
     for i in graph.V:
-        global chSc
         if (centreX(i.x*scale)>width-10
             or centreY(i.y*scale)>height-10
             or centreX(i.x*scale)<10
